@@ -65,3 +65,10 @@ jobs:
         statuses: "${{ inputs.statuses }}"
         package: "${{ steps.current_package.outputs.package_name }}"
         
+        # Report on success
+    - name: Upload results
+      shell: bash
+      run: |
+        # OK :)
+        cat cran-status.md >$GITHUB_STEP_SUMMARY
+        

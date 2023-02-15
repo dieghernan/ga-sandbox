@@ -3,3 +3,9 @@
 .RData
 .Ruserdata
 *.Rproj
+onroot.Rcheck/
+onroot*.tar.gz
+onroot*.tgz
+.Rbuildignore
+cran-status.md
+cran_errors.csv

@@ -1,11 +1,13 @@
 if (!requireNamespace("optparse", quietly = TRUE)) {
-  install.packages("optparse", repos = "https://cloud.r-project.org")
+  install.packages("optparse", repos = "https://cloud.r-project.org", 
+                   verbose = FALSE)
 }
 
-library(dplyr)
-library(rvest)
-library(stringr)
-library(digest)
+
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(rvest))
+suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(digest))
 
 # check if needed : package name and working dir path as input arguments :
 library(optparse)
@@ -16,7 +18,7 @@ option_list <- list(
     metavar = "character"
   ),
   make_option(c("-s", "--statuses"),
-    type = "character", default = "ERROR,WARN",
+    type = "character", default = "ERROR,WARN,NOTE",
     help = "status types (comma separated list, for exemple ERROR,WARN,NOTE",
     metavar = "character"
   )
