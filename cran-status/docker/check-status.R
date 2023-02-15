@@ -122,9 +122,9 @@ if (!httr::http_error(url)) {
   cat(paste("ERROR ACCESSING URL=", url))
 
   writeLines(
-    c(paste0("# Error accessing url ", url),
+    c(paste0("# Is `", pkg, "` available on CRAN?",
       "",
-      paste0("Is `", pkg, "` available on CRAN?")),
+      paste0("Error accessing url ", url))),
   "cran-status.md")
 }
 

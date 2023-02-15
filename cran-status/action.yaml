@@ -1,0 +1,106 @@
+# Workflow derived from https://github.com/pharmaverse/admiralci
+name: cran-status
+author: Diego Hernangómez
+description: | 
+  Check CRAN status of a R package. Workflow derived from
+  https://github.com/pharmaverse/admiralci
+
+inputs:
+  path:
+    description: |
+      Path to the R package root, if the package is not at the top level of 
+      the repository.
+    default: '.'
+    required: false
+    type: string
+  package:
+    description: | 
+      Package to check. If provided, it would have priority over the 
+      package on the repo.
+    required: false
+    default: '' 
+    type: string
+  statuses:
+    description: |
+      Create an issue if one or more of the following statuses are 
+      reported on the check report. This is a comma-separated string of 
+      statuses. Default value is ''WARN,ERROR'. Allowed statuses are 
+      'NOTE', 'WARN', and 'ERROR'.
+    default: 'WARN,ERROR'
+    required: false
+    type: string
+  issue-assignees:
+    description: |
+      Whom should the issue be assigned to if errors are
+      encountered in the CRAN status checks?
+      This is a comma-separated string of GitHub usernames.
+      If undefined or empty, no assignments are made.
+    default: ''
+    required: false
+    type: string
+
+permissions: write-all
+
+jobs:
+  cran-status:
+    name: Check Status
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/tidyverse:latest
+      
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        
+      - name: Get current package name
+        id: current_package
+        run: |
+          echo "::group::Get package to check"
+          package_name="${{ inputs.package }}"
+          if [ -z "$package_name" ] 
+          then
+            cd "${{ inputs.path }}"
+            if test -f DESCRIPTION; then
+              package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
+            else
+              echo "::error::DESCRIPTION file not found on ${{ inputs.path }} dir"
+            fi
+          fi
+            
+          echo "package_name=$package_name" >> $GITHUB_OUTPUT
+          echo "::endgroup::"
+          echo "Testing package: $package_name"
+          
+      - name: Compute Cran Status codes
+        uses: dieghernan/ga-sandbox/cran-status/docker@main
+        with: 
+          statuses: "${{ inputs.statuses }}"
+          package: "${{ steps.current_package.outputs.package_name }}"
+          
+        # Report check
+      - name: Upload results
+        shell: bash
+        run: |
+          cat cran-status.md >$GITHUB_STEP_SUMMARY
+          
+        - name: Get Date
+          id: today
+          run: |
+            echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          
+      - name: Identify results
+          id: cran_errors_status
+          run: |
+            new_errors=false
+            if test -f "issue.md"; then
+              new_errors=true
+            fi
+            echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
+            
+        - name: Report Status
+          if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
+          uses: peter-evans/create-issue-from-file@v4
+          with:
+            title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
+            content-filepath: ./${{ inputs.path }}/cran-status.md
+            assignees: ${{ inputs.issue-assignees }}
