@@ -31,6 +31,7 @@ jobs:
     - name: Get current package name
       id: current_package
       run: |
+        echo "::group::Get package to check"
         package_name="${{ inputs.package }}"
         if [ -z "$package_name" ] 
         then
@@ -38,9 +39,10 @@ jobs:
           if test -f DESCRIPTION; then
             package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
           else
-            echo 'DESCRIPTION file not found on ${{ inputs.path }}'
+            echo "::error DESCRIPTION file not found on ${{ inputs.path }}"
           fi
         fi
           
         echo "package_name=$package_name"
+        echo "::endgroup::"
         
