@@ -3,25 +3,35 @@ name: cran-status
 on:
   workflow_dispatch:
     inputs:
-      package:
-        description: | 
-          Package to check. This would have priority over the package 
-          on the repo
-        required: false
-        default: '' 
-        type: string
       path:
         description: |
-          Path to the R package root, if the package is not at the
-          top level of the repository.
+          Path to the R package root, if the package is not at the top level of 
+          the repository.
         default: '.'
         required: false
         type: string
-
+      package:
+        description: | 
+          Package to check. If provided, it would have priority over the 
+          package on the repo.
+        required: false
+        default: '' 
+        type: string
+      statuses:
+        description: |
+          Create an issue if one or more of the following statuses are 
+          reported on the check report. This is a comma-separated string of 
+          statuses. Default value is ''WARN,ERROR'. Allowed statuses are 
+          'NOTE', 'WARN', and 'ERROR'.
+        default: 'WARN,ERROR'
+        required: false
+        type: string
   
 jobs:
   cran-status:
     runs-on: ubuntu-latest
+    container:
+      image: rocker/tidyverse:latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       
@@ -40,10 +50,15 @@ jobs:
             package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
           else
             echo "::error::DESCRIPTION file not found on ${{ inputs.path }} dir"
-            exit 1
           fi
         fi
           
-        echo "package_name=$package_name"
+        echo "package_name=$package_name" >> $GITHUB_OUTPUT
         echo "::endgroup::"
+        
+      - name: Compute Cran Status codes
+        uses: dieghernan/ga-sandbox/cran-status/docker@main
+        with: 
+          statuses: "${{ inputs.statuses }}"
+          package: "${{ steps.current_package.outputs.package_name }}"
         
