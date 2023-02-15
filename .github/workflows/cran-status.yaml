@@ -30,6 +30,7 @@ on:
 jobs:
   cran-status:
     runs-on: ubuntu-latest
+    permissions: write-all
     container:
       image: rocker/tidyverse:latest
     env:
