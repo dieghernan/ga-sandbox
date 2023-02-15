@@ -119,3 +119,6 @@ if (!httr::http_error(url)) {
 
   writeLines(paste("ERROR ACCESSING URL=", url), "cran-status.md")
 }
+
+cat(paste0(path.expand(list.files(full.names = TRUE)), collapse = "\n"), sep = "\n")
+    
