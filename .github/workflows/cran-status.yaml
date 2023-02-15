@@ -56,6 +56,9 @@ jobs:
         echo "package_name=$package_name" >> $GITHUB_OUTPUT
         echo "::endgroup::"
         
+        echo "Testing package: $package_name"
+        
+        
     - name: Compute Cran Status codes
       uses: dieghernan/ga-sandbox/cran-status/docker@main
       with: 

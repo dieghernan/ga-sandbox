@@ -59,7 +59,7 @@ build_md5_codes <- function(pkg, errors, step) {
 
 pkg <- opt$package # paste(desc::desc_get(keys = "Package"))
 
-cat("Testing package:", pkg)
+cat("Testing package:", pkg, "\n-----\n")
 
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
 
