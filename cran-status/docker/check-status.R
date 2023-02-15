@@ -102,7 +102,7 @@ if (!httr::http_error(url)) {
     }
     if (any(checks$Status %in% statuses)) {
       cran_status(sprintf(
-        "CRAN checks for %s resulted in one or more (%s)s:\n\n",
+        "**CRAN checks for %s resulted in one or more (%s)s**:\n\n",
         pkg,
         status_types
       ))
@@ -111,13 +111,21 @@ if (!httr::http_error(url)) {
       cran_status(sprintf(
         "\n\nAll details and logs are available here: %s", url
       ))
+      
+      # Copy 
+      file.copy("cran-status.md", "issue.md")
+      
       print("❌ One or more CRAN checks resulted in an invalid status ❌")
     }
   }
 } else {
   cat(paste("ERROR ACCESSING URL=", url))
 
-  writeLines(paste("ERROR ACCESSING URL=", url), "cran-status.md")
+  writeLines(
+    c(paste0("# Error accessing url ", url),
+      "",
+      paste0("Is `", pkg, "` available on CRAN?")),
+  "cran-status.md")
 }
 
 cat(paste0(path.expand(list.files(full.names = TRUE, recursive = TRUE)), collapse = "\n"), sep = "\n")
