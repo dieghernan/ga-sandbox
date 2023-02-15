@@ -38,7 +38,7 @@ jobs:
           if test -f DESCRIPTION; then
             package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
           else
-            core.setFailed('DESCRIPTION file not found on ${{ inputs.package }}');
+            echo 'DESCRIPTION file not found on ${{ inputs.path }}'
           fi
         fi
           
