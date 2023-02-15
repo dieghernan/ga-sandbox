@@ -115,5 +115,7 @@ if (!httr::http_error(url)) {
     }
   }
 } else {
-  print(paste("ERROR ACCESSING URL=", url))
+  cat(paste("ERROR ACCESSING URL=", url))
+
+  writeLines(paste("ERROR ACCESSING URL=", url), "cran-status.md")
 }
