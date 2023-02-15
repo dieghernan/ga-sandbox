@@ -1,4 +1,7 @@
-if (!require("optparse")) install.packages("optparse", repos = "https://cloud.r-project.org")
+if (!requireNamespace("optparse", quietly = TRUE)) {
+  install.packages("optparse", repos = "https://cloud.r-project.org")
+}
+
 library(dplyr)
 library(rvest)
 library(stringr)
@@ -55,6 +58,9 @@ build_md5_codes <- function(pkg, errors, step) {
 }
 
 pkg <- opt$package # paste(desc::desc_get(keys = "Package"))
+
+cat("Testing package:", pkg)
+
 url <- sprintf("https://cran.r-project.org/web/checks/check_results_%s.html", pkg)
 
 if (!httr::http_error(url)) {
