@@ -1,0 +1,45 @@
+name: cran-status
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: | 
+          Package to check. This would have priority over the package 
+          on the repo
+        required: false
+        default: '' 
+        type: string
+      path:
+        description: |
+          Path to the R package root, if the package is not at the
+          top level of the repository.
+        default: '.'
+        required: false
+        type: string
+
+  
+jobs:
+  cran-status:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Get current package name
+      id: current_package
+      run: |
+        package_name="${{ inputs.package }}"
+        if [ -z "$package_name" ] then
+          cd "${{ inputs.path }}"
+          if test -f DESCRIPTION; then
+            package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
+          else
+            core.setFailed('DESCRIPTION file not found on ${{ inputs.package }}');
+          fi
+        fi
+          
+        echo "package_name=$package_name"
+        
