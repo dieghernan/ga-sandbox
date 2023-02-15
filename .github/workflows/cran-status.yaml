@@ -56,9 +56,9 @@ jobs:
         echo "package_name=$package_name" >> $GITHUB_OUTPUT
         echo "::endgroup::"
         
-      - name: Compute Cran Status codes
-        uses: dieghernan/ga-sandbox/cran-status/docker@main
-        with: 
-          statuses: "${{ inputs.statuses }}"
-          package: "${{ steps.current_package.outputs.package_name }}"
+    - name: Compute Cran Status codes
+      uses: dieghernan/ga-sandbox/cran-status/docker@main
+      with: 
+        statuses: "${{ inputs.statuses }}"
+        package: "${{ steps.current_package.outputs.package_name }}"
         
