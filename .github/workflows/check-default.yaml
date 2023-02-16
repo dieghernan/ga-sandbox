@@ -5,7 +5,15 @@ on:
     branches: [main, master]
 
 jobs:
-  check-default:
-    name: Check & Report
-    uses: dieghernan/cran-status-check@main
-    
+  check:
+    runs-on: ubuntu-latest
+    name: Check default
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check & Report
+        uses: dieghernan/cran-status-check@main
