@@ -45,15 +45,14 @@ inputs:
     type: string
 
 
-jobs:
-  checkcran:
-    name: Build and deploy
-    uses: dieghernan/ga-sandbox/.github/actions/cran-status-set-jobs@main
-    with:
-      path: ${{inputs.path}}
-      package: ${{inputs.package}}
-      statuses: ${{inputs.statuse}}
-      create-issue: ${{inputs.create-issue}}
-      issue-assignees: ${{inputs.issue-assignees}}
-      
-    secrets: inherit
+runs:
+  using: composite
+  steps:
+    - name: Build and deploy
+      uses: dieghernan/ga-sandbox/.github/actions/cran-status-set-jobs@main
+      with:
+        path: ${{inputs.path}}
+        package: ${{inputs.package}}
+        statuses: ${{inputs.statuse}}
+        create-issue: ${{inputs.create-issue}}
+        issue-assignees: ${{inputs.issue-assignees}}
