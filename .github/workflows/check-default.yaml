@@ -15,5 +15,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Check & Report
+      - name: Check & Report Default
         uses: dieghernan/cran-status-check@main
+
+      - name: Check & Report with package name
+        uses: dieghernan/cran-status-check@main
+        with:
+          package: mapSpain
+          
+      - name: Check & Report with dir
+        uses: dieghernan/cran-status-check@main
+        with:
+          package: testpak
