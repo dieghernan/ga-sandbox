@@ -1,6 +1,8 @@
 name: cran-status-manual
 
 on:
+  push:
+    branches: [main, master]
   workflow_dispatch:
     inputs:
       path:
@@ -108,4 +110,5 @@ jobs:
     - name: Fail action on CRAN errors
       if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }
       run: |
-        echo "::error::CRAN errors found for ${{ steps.current_package.outputs.package_name }} package"
+        package_name="${{ steps.current_package.outputs.package_name }}"
+        echo "::error::CRAN errors found for $package_name package"
