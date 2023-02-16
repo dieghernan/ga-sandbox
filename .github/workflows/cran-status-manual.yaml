@@ -108,7 +108,7 @@ jobs:
         assignees: ${{ inputs.issue-assignees }}
         
     - name: Fail action on CRAN errors
-      if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }
+      if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
       env:
         PKG: ${{ steps.current_package.outputs.package_name }}
       run: |
