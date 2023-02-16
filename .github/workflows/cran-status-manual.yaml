@@ -10,7 +10,7 @@ on:
           Path to the R package root, if the package is not at the top level of 
           the repository.
         default: '.'
-        required: true
+        required: false
         type: string
       package:
         description: | 
@@ -62,10 +62,14 @@ jobs:
         echo "::group::Get package name to check"
         package_name="${{ inputs.package }}"
         if [ -z "$package_name" ]; then 
-          package_name=$(grep "Package:" ${{ inputs.path }}/DESCRIPTION | awk '{print $NF}')
+          path="${{ inputs.path }}"
+          if [ -z "$package_name" ]; then
+            path="."
+          fi
+          package_name=$(grep "Package:" $path/DESCRIPTION | awk '{print $NF}')
         fi
         if [ -z "$package_name" ]; then 
-          echo "::error::DESCRIPTION file not found on ${{ inputs.path }} dir"
+          echo "::error::DESCRIPTION file not found on $path dir"
         fi
         echo "package_name=$package_name" >> $GITHUB_OUTPUT
         echo "::endgroup::"
@@ -99,18 +103,18 @@ jobs:
         fi
         echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
         
+    - name: Report Status
+      if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' && inputs.create-issue == 'true' }}
+      uses: peter-evans/create-issue-from-file@v4
+      with:
+        title: "URGENT! Failed CRAN Checks for ${{ steps.current_package.outputs.package_name }}: ${{ steps.today.outputs.date }}"
+        content-filepath: ./${{ inputs.path }}/cran-status.md
+        assignees: ${{ inputs.issue-assignees }}
+
     - name: Fail action on CRAN errors
       if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
       env:
         PKG: ${{ steps.current_package.outputs.package_name }}
       run: |
         echo "::error::CRAN errors found for $PKG package"
-        
-    - name: Report Status
-      if: ${{ failure() && inputs.create-issue == 'true' }}
-      uses: peter-evans/create-issue-from-file@v4
-      with:
-        title: "URGENT! Failed CRAN Checks for ${{ steps.current_package.outputs.package_name }}: ${{ steps.today.outputs.date }}"
-        content-filepath: ./${{ inputs.path }}/cran-status.md
-        assignees: ${{ inputs.issue-assignees }}
-        
+        exit 1        
