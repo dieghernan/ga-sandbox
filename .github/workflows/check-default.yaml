@@ -2,6 +2,7 @@ name: check-default
 
 on:
   push:
+    branches: [main, master]
 
 jobs:
   check-default:
