@@ -123,7 +123,7 @@ if (!httr::http_error(url)) {
 
   writeLines(
     c(paste0("# Is `", pkg, "` available on CRAN?",
-      "",
+      "\n\n",
       paste0("Error accessing url ", url))),
   "cran-status.md")
 }

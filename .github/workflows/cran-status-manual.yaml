@@ -51,18 +51,14 @@ jobs:
     - name: Get current package name
       id: current_package
       run: |
-        echo "::group::Get package to check"
+        echo "::group::Get package name to check"
         package_name="${{ inputs.package }}"
-        if [ -z "$package_name" ] 
-        then
-          cd "${{ inputs.path }}"
-          if test -f DESCRIPTION; then
-            package_name=$(grep "Package:" DESCRIPTION | awk '{print $NF}')
-          else
-            echo "::error::DESCRIPTION file not found on ${{ inputs.path }} dir"
-          fi
+        if [ -z "$package_name" ]; then 
+          package_name=$(grep "Package:" ${{ inputs.path }}/DESCRIPTION | awk '{print $NF}')
         fi
-          
+        if [ -z "$package_name" ]; then 
+          echo "::error::DESCRIPTION file not found on ${{ inputs.path }} dir"
+        fi
         echo "package_name=$package_name" >> $GITHUB_OUTPUT
         echo "::endgroup::"
         
