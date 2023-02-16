@@ -1,27 +1,17 @@
-name: check-stop2
+name: check-ko-root
 
 on:
   push:
     branches: [main, master]
 
-permissions: write-all
-
 jobs:
   check:
     runs-on: ubuntu-latest
-    name: Check default
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Check & Report with package name
-        uses: dieghernan/cran-status-check@main
         with:
-          package: mapSpain
           statuses: "NOTE,WARNING,ERROR"
-          create-issue: "true"
-          
-

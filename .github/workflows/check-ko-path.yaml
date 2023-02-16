@@ -1,4 +1,4 @@
-name: check-stop
+name: check-ko-path
 
 on:
   push:
@@ -7,19 +7,14 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    name: Check default
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Check & Report with package name
-        uses: dieghernan/cran-status-check@main
         with:
-          package: mapSpain
+          path: testpak
           statuses: "NOTE,WARNING,ERROR"
+          fail-on-error: "false"
           create-issue: "false"
-          
-
