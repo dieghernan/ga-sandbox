@@ -26,6 +26,12 @@ on:
         default: 'WARN,ERROR'
         required: false
         type: string
+      create-issue:
+        description: |
+          Logical, create an issue on CRAN failed checks
+        default: 'true'
+        required: false
+        type: boolean
       issue-assignees:
         description: |
           Whom should the issue be assigned to if errors are
@@ -90,11 +96,16 @@ jobs:
           new_errors=true
         fi
         echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
-          
+        
     - name: Report Status
-      if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
+      if: ${{ inputs.create-issue }} == 'true' && ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
       uses: peter-evans/create-issue-from-file@v4
       with:
         title: "URGENT! Failed CRAN Checks for ${{ steps.current_package.outputs.package_name }}: ${{ steps.today.outputs.date }}"
         content-filepath: ./${{ inputs.path }}/cran-status.md
         assignees: ${{ inputs.issue-assignees }}
+        
+    - name: Fail action on CRAN errors
+      if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }
+      run: |
+        echo "::error::Failed CRAN Checks for ${{ steps.current_package.outputs.package_name }}"
