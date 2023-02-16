@@ -45,7 +45,7 @@ on:
         type: string
   
 jobs:
-  check-package:
+  job1:
     runs-on: ubuntu-latest
     permissions: write-all
     container:
@@ -102,9 +102,10 @@ jobs:
         fi
         echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
 
-  error-reporting:
+  job2:
     runs-on: ubuntu-latest
-    needs: check-package
+    needs: job1
+    steps:
         
     - name: Get Date
       id: today
@@ -112,9 +113,9 @@ jobs:
         echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         
     - name: Report Status
-      if: ${{ needs.check-package.outputs.error == 'true' && inputs.create-issue == 'true' }}
+      if: ${{ needs.job1.outputs.error == 'true' && inputs.create-issue == 'true' }}
       uses: peter-evans/create-issue-from-file@v4
       with:
-        title: "URGENT! Failed CRAN Checks for ${{ needs.check-package.outputs.error }}: ${{ steps.today.outputs.date }}"
+        title: "URGENT! Failed CRAN Checks for ${{ needs.job1.outputs.error }}: ${{ steps.today.outputs.date }}"
         content-filepath: ${{ inputs.path }}/cran-status.md
         assignees: ${{ inputs.issue-assignees }}
