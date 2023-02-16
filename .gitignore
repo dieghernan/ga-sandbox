@@ -7,3 +7,6 @@ onroot.Rcheck/
 onroot*.tar.gz
 onroot*.tgz
 .Rbuildignore
+dplyr.Rcheck/
+dplyr*.tar.gz
+dplyr*.tgz

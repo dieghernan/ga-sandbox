@@ -83,24 +83,24 @@ jobs:
       run: |
         cat cran-status.md >$GITHUB_STEP_SUMMARY
         
-      - name: Get Date
-        id: today
-        run: |
-          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+    - name: Get Date
+      id: today
+      run: |
+        echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         
-    - name: Identify results
-        id: cran_errors_status
-        run: |
-          new_errors=false
-          if test -f "issue.md"; then
-            new_errors=true
-          fi
-          echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
+    - name: Check for errors
+      id: cran_errors_status
+      run: |
+        new_errors=false
+        if test -f "issue.md"; then
+          new_errors=true
+        fi
+        echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
           
-      - name: Report Status
-        if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
-        uses: peter-evans/create-issue-from-file@v4
-        with:
-          title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
-          content-filepath: ./${{ inputs.path }}/cran-status.md
-          assignees: ${{ inputs.issue-assignees }}
+    - name: Report Status
+      if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
+      uses: peter-evans/create-issue-from-file@v4
+      with:
+        title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
+        content-filepath: ./${{ inputs.path }}/cran-status.md
+        assignees: ${{ inputs.issue-assignees }}
