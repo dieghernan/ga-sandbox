@@ -95,6 +95,6 @@ jobs:
       if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }}
       uses: peter-evans/create-issue-from-file@v4
       with:
-        title: "URGENT! Failed CRAN Checks: ${{ steps.today.outputs.date }}"
+        title: "URGENT! Failed CRAN Checks for ${{ steps.current_package.outputs.package_name }}: ${{ steps.today.outputs.date }}"
         content-filepath: ./${{ inputs.path }}/cran-status.md
         assignees: ${{ inputs.issue-assignees }}
