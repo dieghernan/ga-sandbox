@@ -84,6 +84,14 @@ if (!httr::http_error(url)) {
     print(
       sprintf("None of this status found in the CRAN table. (status=%s)", status_types)
     )
+    
+    writeLines(paste0(
+      ":white_check_mark: ", pkg,"\n", 
+      sprintf("None of this status found in the CRAN table. (status=%s)", status_types)
+    ), 
+    con = "cran-status.md"
+    )
+    
   } else {
     # Build each step md5 code
     errors <- build_md5_codes(pkg, errors, "Build")
