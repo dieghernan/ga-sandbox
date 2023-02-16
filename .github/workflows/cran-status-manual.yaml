@@ -52,7 +52,7 @@ jobs:
       image: rocker/tidyverse:latest
     outputs:
       pkg: ${{ steps.current_package.outputs.package_name }}
-      error: ${{ steps.cran_errors_status.outputs.new_errors }
+      error: ${{ steps.cran_errors_status.outputs.new_errors }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       
