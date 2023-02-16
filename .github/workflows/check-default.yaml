@@ -24,6 +24,7 @@ jobs:
         uses: dieghernan/cran-status-check@main
         with:
           package: mapSpain
+          statuses: "ERROR"
           
       - name: Check & Report with dir
         uses: dieghernan/cran-status-check@main
