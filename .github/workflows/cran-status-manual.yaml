@@ -48,8 +48,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - uses: 
-    
     - name: Get current package name
       id: current_package
       run: |
