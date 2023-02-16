@@ -28,4 +28,4 @@ jobs:
       - name: Check & Report with dir
         uses: dieghernan/cran-status-check@main
         with:
-          package: testpak
+          path: testpak
