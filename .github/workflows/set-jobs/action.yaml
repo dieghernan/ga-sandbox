@@ -40,15 +40,11 @@ on:
         required: false
         type: string
 
-env:
-  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-  
 jobs:
   pakname:
     name: Detect package name
     runs-on: ubuntu-latest
     permissions: write-all
-    outputs:
     steps:
     - uses: actions/checkout@v3
     
