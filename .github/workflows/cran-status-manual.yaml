@@ -108,4 +108,4 @@ jobs:
     - name: Fail action on CRAN errors
       if: ${{ steps.cran_errors_status.outputs.new_errors == 'true' }
       run: |
-        echo "::error::Failed CRAN Checks for ${{ steps.current_package.outputs.package_name }}"
+        echo "::error::CRAN errors found for ${{ steps.current_package.outputs.package_name }} package"
