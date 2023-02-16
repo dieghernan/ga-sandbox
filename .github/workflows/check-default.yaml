@@ -17,6 +17,8 @@ jobs:
 
       - name: Check & Report Default
         uses: dieghernan/cran-status-check@main
+        with:
+          statuses: "ERROR"
 
       - name: Check & Report with package name
         uses: dieghernan/cran-status-check@main
