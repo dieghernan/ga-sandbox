@@ -1,0 +1,10 @@
+name: check-default
+
+on:
+  push:
+
+jobs:
+  check-default:
+    name: Check & Report
+    uses: dieghernan/ga-sandbox/cran-status-check@main
+    
