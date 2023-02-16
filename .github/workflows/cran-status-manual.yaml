@@ -101,8 +101,7 @@ jobs:
           new_errors=true
         fi
         echo "new_errors=$new_errors" >> $GITHUB_OUTPUT
-        
-jobs:
+
   error-reporting:
     runs-on: ubuntu-latest
     needs: check-package
