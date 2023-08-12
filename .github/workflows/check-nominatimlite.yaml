@@ -1,4 +1,4 @@
-name: check-ko-input
+name: check-nominatimlite-input
 
 on:
   push:
