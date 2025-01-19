@@ -16,6 +16,6 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Check
-        uses: dieghernan/cran-status-check@v1
+        uses: dieghernan/cran-status-check@v2
         with:
           statuses: "NOTE,WARNING,ERROR"
